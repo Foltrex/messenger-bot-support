@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: queue.bot.messages
+  rabbitmq:
+    addresses: localhost
+        
+server:
+  port: 0
