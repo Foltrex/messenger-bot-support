@@ -21,8 +21,8 @@ public record MessageCryptoService(
 ) {
 
     public Message encryptRSA(Message message, String publicKeyToEncrypt, String privateKeyToSign, String nonce) {
-        String chatCreatorPrivateKey = fileReader.readRsaPrivateKey();
-        
+        // String chatCreatorPrivateKey = fileReader.readRsaPrivateKey();
+
         return null;
     }
 
