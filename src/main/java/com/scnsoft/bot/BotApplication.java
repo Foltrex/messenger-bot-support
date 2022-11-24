@@ -1,4 +1,4 @@
-package com.scnsoft.bot.bot;
+package com.scnsoft.bot;
 
 import javax.xml.transform.Source;
 

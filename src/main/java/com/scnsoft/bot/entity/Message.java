@@ -1,4 +1,4 @@
-package com.scnsoft.bot.bot.entity;
+package com.scnsoft.bot.entity;
 
 
 import lombok.AllArgsConstructor;
