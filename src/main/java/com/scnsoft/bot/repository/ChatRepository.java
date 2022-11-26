@@ -5,9 +5,9 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.scnsoft.bot.entity.Customer;
+import com.scnsoft.bot.entity.Chat;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, UUID> {
-
+public interface ChatRepository extends JpaRepository<Chat, UUID> {
+    
 }

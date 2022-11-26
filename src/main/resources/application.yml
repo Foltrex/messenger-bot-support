@@ -1,11 +1,11 @@
-spring:
-  cloud:
-    stream:
-      bindings:
-        input:
-          destination: queue.bot.messages
-  rabbitmq:
-    addresses: localhost
-        
 server:
-  port: 0
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3307/whisper
+    username: root
+    password: 994499_ma
+  jpa:
+    hibernate:
+      ddl-auto: update
