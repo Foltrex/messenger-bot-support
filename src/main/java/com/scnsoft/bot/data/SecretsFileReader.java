@@ -32,7 +32,12 @@ public class SecretsFileReader {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    private static final String SECRETS_FILE_PATH = "src/main/resources/secrets.txt";
+    private static final String CHAR_CREATOR_SECRETS_FILE_PATH = "src/main/resources/secrets.txt";
+
+    private static final String BEGIN_PRIVATE_KEY_REGEX = ".*BEGIN RSA PRIVATE KEY.*";
+    private static final String END_PRIVATE_KEY_REGEX = ".*END RSA PRIVATE KEY.*";
+    private static final String BEGIN_PUBLIC_KEY_REGEX = ".*BEGIN PUBLIC KEY.*";
+    private static final String END_PUBLIC_KEY_REGEX = ".*END PUBLIC KEY.*";
 
     private static final String UUID_REGEX = String.format("%s-%s-%s-%s-%s", 
         "[0-9a-fA-F]{8}",
@@ -42,13 +47,13 @@ public class SecretsFileReader {
         "[0-9a-fA-F]{12}$");
 
     public RSAPrivateKey readRsaPrivateKey() throws MessageDecrypterException {
-        Path path = Paths.get(SECRETS_FILE_PATH);
+        Path path = Paths.get(CHAR_CREATOR_SECRETS_FILE_PATH);
         try (Stream<String> lines = Files.lines(path)) {
 
             String privateKey = lines
-                .dropWhile(line -> !line.matches(".*BEGIN RSA PRIVATE KEY.*"))
+                .dropWhile(line -> !line.matches(BEGIN_PRIVATE_KEY_REGEX))
                 .skip(1)
-                .takeWhile(line -> !line.matches(".*END RSA PRIVATE KEY.*"))
+                .takeWhile(line -> !line.matches(END_PRIVATE_KEY_REGEX))
                 .map(line -> line.replaceAll(System.lineSeparator(), ""))
                 .collect(Collectors.joining(""));
             
@@ -64,13 +69,13 @@ public class SecretsFileReader {
     }
 
     public RSAPublicKey readRsaPublicKey() throws MessageDecrypterException {
-        Path path = Paths.get(SECRETS_FILE_PATH);
+        Path path = Paths.get(CHAR_CREATOR_SECRETS_FILE_PATH);
         try (Stream<String> lines = Files.lines(path)) {
 
             String publicKey = lines
-                .dropWhile(line -> !line.matches(".*BEGIN PUBLIC KEY.*"))
+                .dropWhile(line -> !line.matches(BEGIN_PUBLIC_KEY_REGEX))
                 .skip(1)
-                .takeWhile(line -> !line.matches(".*END PUBLIC KEY.*"))
+                .takeWhile(line -> !line.matches(END_PUBLIC_KEY_REGEX))
                 .map(line -> line.replaceAll(System.lineSeparator(), ""))
                 .collect(Collectors.joining(""));
 
@@ -86,7 +91,7 @@ public class SecretsFileReader {
     }
 
     public UUID readCustomerId() throws MessageDecrypterException {
-        Path path = Paths.get(SECRETS_FILE_PATH);
+        Path path = Paths.get(CHAR_CREATOR_SECRETS_FILE_PATH);
         try {
             String secrets = new String(Files.readAllBytes(path), Charset.defaultCharset());
             Pattern pattern = Pattern.compile(UUID_REGEX);

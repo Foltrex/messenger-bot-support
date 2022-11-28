@@ -4,7 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
@@ -13,9 +14,14 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.tomcat.util.codec.binary.Base64;
+
+import com.fasterxml.jackson.databind.JsonSerializable.Base;
 import com.scnsoft.bot.entity.Chat;
 import com.scnsoft.bot.entity.Customer;
 import com.scnsoft.bot.entity.Message;
@@ -40,12 +46,11 @@ public record AesMessageDecrypter(
             String nonce = message.getNonce();
             SecretKey aesKey = getAesSecretKey(message);
             IvParameterSpec ivParameterSpec = getInitializationVector(nonce);
-            Cipher cipher = Cipher.getInstance("AES/CBC");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameterSpec);
 
-            Base64.Decoder decoder = Base64.getDecoder();
 
-            byte[] decodedMessageData = decoder.decode(message.getData());
+            byte[] decodedMessageData = Base64.decodeBase64(message.getData());
             byte[] decryptedBytes = cipher.doFinal(decodedMessageData);
             String decryptedMessageData = new String(decryptedBytes, StandardCharsets.UTF_8);
             Message decryptedMessage = new Message(message);
@@ -60,8 +65,7 @@ public record AesMessageDecrypter(
     }
     
     private IvParameterSpec getInitializationVector(String nonce) {
-        Base64.Decoder decoder = Base64.getDecoder();
-        byte[] initializationVector = decoder.decode(nonce);
+        byte[] initializationVector = Base64.decodeBase64(nonce);
         return new IvParameterSpec(initializationVector);
     }
 
@@ -79,10 +83,20 @@ public record AesMessageDecrypter(
         String helloMessageData = decryptedHelloMessage.getData();
         String[] helloMessageDataParts = helloMessageData.split("__");
         String aesKey = helloMessageDataParts[1];
+        // log.info(aesKey);
         
-        Base64.Decoder decoder = Base64.getDecoder();
-        byte[] decodedAesKey = decoder.decode(aesKey);
-        SecretKey secretKey = new SecretKeySpec(decodedAesKey, "AES");
+        byte[] decodedAesKey = Base64.decodeBase64(aesKey);
+        SecretKey secretKey = new SecretKeySpec(aesKey.getBytes(), "AES");
+        // SecretKeySpec secretKey = null;
+        // try {
+        //     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+        //     KeySpec keySpec = new PBEKeySpec(aesKey.toCharArray());
+        //     SecretKey tmp = factory.generateSecret(keySpec);
+        //     secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+        // } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
         return secretKey;
     }
 }
