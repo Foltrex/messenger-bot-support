@@ -1,4 +1,4 @@
-package com.scnsoft.bot.logic.decryptor.impl;
+package com.scnsoft.bot.logic.decrypter.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -17,7 +17,7 @@ import javax.crypto.NoSuchPaddingException;
 import com.scnsoft.bot.entity.Message;
 import com.scnsoft.bot.entity.Utility;
 import com.scnsoft.bot.exception.MessageDecrypterException;
-import com.scnsoft.bot.logic.decryptor.MessageDecrypter;
+import com.scnsoft.bot.logic.decrypter.MessageDecrypter;
 import com.scnsoft.bot.repository.UtilRepository;
 
 import lombok.extern.log4j.Log4j2;

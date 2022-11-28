@@ -26,11 +26,19 @@ public record MessageContoller(
 
     @PostMapping
     public Message receive(@RequestBody Message message) throws ServiceException, MessageDecrypterException {
-        // UUID id = UUID.fromString("dfad412f-3d27-4cee-b606-3e0863186a33");
-        // Message message = messageRepository.findById(id).get();
         log.info(messageCryptoService.decrypt(message));
         // Message decryptedHelloMessage = messageCryptoService.decryptRSA(message);
         // log.info("Decrypted hello message: " + decryptedHelloMessage);
         return null;
     }
+
+    // @GetMapping
+    // public Message receive() throws ServiceException, MessageDecrypterException {
+    //     UUID id = UUID.fromString("dd251afa-a42c-4ab9-bcb4-f19181a58248");
+    //     Message message = messageRepository.findById(id).get();
+    //     log.info(messageCryptoService.decrypt(message));
+    //     // Message decryptedHelloMessage = messageCryptoService.decryptRSA(message);
+    //     // log.info("Decrypted hello message: " + decryptedHelloMessage);
+    //     return null;
+    // }
 }

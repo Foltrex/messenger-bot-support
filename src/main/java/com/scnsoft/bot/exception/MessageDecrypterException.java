@@ -5,20 +5,20 @@ public class MessageDecrypterException extends Exception {
     public MessageDecrypterException() {
     }
 
-    public MessageDecrypterException(String arg0) {
-        super(arg0);
+    public MessageDecrypterException(String message) {
+        super(message);
     }
 
-    public MessageDecrypterException(Throwable arg0) {
-        super(arg0);
+    public MessageDecrypterException(Throwable cause) {
+        super(cause);
     }
 
-    public MessageDecrypterException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
+    public MessageDecrypterException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public MessageDecrypterException(String arg0, Throwable arg1, boolean arg2, boolean arg3) {
-        super(arg0, arg1, arg2, arg3);
+    public MessageDecrypterException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
     
 }

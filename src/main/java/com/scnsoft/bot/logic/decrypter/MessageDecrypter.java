@@ -1,4 +1,4 @@
-package com.scnsoft.bot.logic.decryptor;
+package com.scnsoft.bot.logic.decrypter;
 
 import com.scnsoft.bot.entity.Message;
 import com.scnsoft.bot.exception.MessageDecrypterException;

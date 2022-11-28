@@ -1,4 +1,4 @@
-package com.scnsoft.bot.logic.decryptor.impl;
+package com.scnsoft.bot.logic.decrypter.impl;
 
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
@@ -21,7 +21,7 @@ import com.scnsoft.bot.entity.Customer;
 import com.scnsoft.bot.entity.Message;
 import com.scnsoft.bot.entity.Message.MessageType;
 import com.scnsoft.bot.exception.MessageDecrypterException;
-import com.scnsoft.bot.logic.decryptor.MessageDecrypter;
+import com.scnsoft.bot.logic.decrypter.MessageDecrypter;
 import com.scnsoft.bot.repository.ChatRepository;
 import com.scnsoft.bot.repository.MessageRepository;
 
