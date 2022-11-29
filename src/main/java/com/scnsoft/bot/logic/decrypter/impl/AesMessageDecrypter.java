@@ -1,11 +1,14 @@
 package com.scnsoft.bot.logic.decrypter.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Arrays;
 import java.util.UUID;
 
 import javax.crypto.BadPaddingException;
@@ -46,7 +49,8 @@ public record AesMessageDecrypter(
             String nonce = message.getNonce();
             SecretKey aesKey = getAesSecretKey(message);
             IvParameterSpec ivParameterSpec = getInitializationVector(nonce);
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+            // Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameterSpec);
 
 
@@ -80,13 +84,16 @@ public record AesMessageDecrypter(
             .orElseThrow();
 
         Message decryptedHelloMessage = rsaMessageDecrypter.decrypt(helloMessage);
-        String helloMessageData = decryptedHelloMessage.getData();
+        // String helloMessageData = decryptedHelloMessage.getData();
+        String helloMessageData = new String(decryptedHelloMessage.getData());
         String[] helloMessageDataParts = helloMessageData.split("__");
         String aesKey = helloMessageDataParts[1];
         // log.info(aesKey);
         
-        byte[] decodedAesKey = Base64.decodeBase64(aesKey);
-        SecretKey secretKey = new SecretKeySpec(aesKey.getBytes(), "AES");
+        // byte[] key = aesKey.getBytes(StandardCharsets.UTF_8);
+        byte[] key = aesKey.getBytes(StandardCharsets.UTF_8);
+
+        SecretKey secretKey = new SecretKeySpec(key, "AES");
         // SecretKeySpec secretKey = null;
         // try {
         //     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
