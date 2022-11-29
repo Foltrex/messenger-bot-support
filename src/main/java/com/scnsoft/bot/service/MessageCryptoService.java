@@ -1,6 +1,8 @@
 package com.scnsoft.bot.service;
 
 
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.stereotype.Service;
 
 import com.scnsoft.bot.data.SecretsFileReader;
@@ -19,24 +21,18 @@ import com.scnsoft.bot.repository.UtilRepository;
 
 @Service
 public record MessageCryptoService(
-    UtilRepository utilRepository,
     ChatRepository chatRepository,
-    CustomerRepository customerRepository,
     MessageRepository messageRepository
 ) {
 
-    public Message decrypt(Message message) throws MessageDecrypterException {
-        MessageDecrypter decrypter = switch (message.getType()) {
-            case hello -> new RsaMessageDecrypter(new SecretsFileReader());
-            case whisper -> new AesMessageDecrypter(
-                    messageRepository,
-                    chatRepository,
-                    new RsaMessageDecrypter(new SecretsFileReader())
-                );
-            default -> throw new IllegalArgumentException("Invalid message type for bot");
-        };
+    public String decrypt(Message message) throws MessageDecrypterException {
+        MessageDecrypter decrypter = new AesMessageDecrypter(
+            messageRepository,
+            chatRepository,
+            new RsaMessageDecrypter(new SecretsFileReader())
+        );
 
-        return decrypter.decrypt(message);
+        return new String(decrypter.decrypt(message), StandardCharsets.UTF_8);
     }
 
     public Message encrypt(Message message) {

@@ -1,5 +1,6 @@
 package com.scnsoft.bot.controller;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,8 @@ public record MessageContoller(
 
     @PostMapping
     public Message receive(@RequestBody Message message) throws ServiceException, MessageDecrypterException {
-        log.info(messageCryptoService.decrypt(message));
+        String decryptedMessage = messageCryptoService.decrypt(message);
+        log.info(decryptedMessage);
         // Message decryptedHelloMessage = messageCryptoService.decryptRSA(message);
         // log.info("Decrypted hello message: " + decryptedHelloMessage);
         return null;

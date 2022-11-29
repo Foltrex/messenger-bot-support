@@ -1,5 +1,6 @@
 package com.scnsoft.bot.logic.decrypter.impl;
 
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -30,11 +31,11 @@ public record RsaMessageDecrypter(
     SecretsFileReader secretsFileReader
 ) implements MessageDecrypter {
 
-    private static final String BEGIN_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----";
-    private static final String END_PRIVATE_KEY = "-----END RSA PRIVATE KEY-----";
-
+    /**
+     * @return decrypted string in utf-16
+     */
     @Override
-    public Message decrypt(Message message) throws MessageDecrypterException {
+    public byte[] decrypt(Message message) throws MessageDecrypterException {
         try {
             RSAPrivateKey privateKey = secretsFileReader.readRsaPrivateKey();
 
@@ -42,11 +43,7 @@ public record RsaMessageDecrypter(
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            byte[] decryptedBytes = cipher.doFinal(inputBytes);
-            String decryptedMessageData = new String(decryptedBytes, StandardCharsets.UTF_8);  
-            Message decryptedMessage = new Message(message);
-            decryptedMessage.setData(decryptedMessageData);
-            return decryptedMessage;
+            return cipher.doFinal(inputBytes);
 
         } catch (BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | 
                 InvalidKeyException | IllegalBlockSizeException e) {
