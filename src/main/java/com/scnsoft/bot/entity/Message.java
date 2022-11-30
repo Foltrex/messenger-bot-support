@@ -27,6 +27,7 @@ import org.hibernate.annotations.Type;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "message")
 @ToString
 public class Message {

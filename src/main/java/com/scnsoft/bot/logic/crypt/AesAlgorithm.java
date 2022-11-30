@@ -1,77 +1,99 @@
-package com.scnsoft.bot.logic.decrypter.impl;
+package com.scnsoft.bot.logic.crypt;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.util.ArrayList;
+import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.JsonSerializable.Base;
-import com.scnsoft.bot.entity.Chat;
-import com.scnsoft.bot.entity.Customer;
 import com.scnsoft.bot.entity.Message;
+import com.scnsoft.bot.entity.Chat;
 import com.scnsoft.bot.entity.Message.MessageType;
 import com.scnsoft.bot.exception.MessageDecrypterException;
-import com.scnsoft.bot.logic.decrypter.MessageDecrypter;
+import com.scnsoft.bot.exception.MessageEncrypterException;
 import com.scnsoft.bot.repository.ChatRepository;
 import com.scnsoft.bot.repository.MessageRepository;
 
 import lombok.extern.log4j.Log4j2;
 
+@Component
 @Log4j2
-public record AesMessageDecrypter(
+public record AesAlgorithm(
     MessageRepository messageRepository,
     ChatRepository chatRepository,
-    RsaMessageDecrypter rsaMessageDecrypter
-) implements MessageDecrypter {
-    
+    RsaAlgorithm rsaAlgorithm
+) {
+        
     private static final byte UNDERSCORE_UTF16_BYTE_NUMBER = 95;
 
-    @Override
+    private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
+
+
+    
+    public byte[] encrypt(Message message) throws MessageEncrypterException {
+        try {
+            String nonce = message.getNonce();
+            SecretKey aesKey = getAesSecretKey(message);
+            IvParameterSpec ivParameterSpec = getInitializationVector(nonce);
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, aesKey, ivParameterSpec);
+            String messageData = message.getData();
+
+            byte[] cipherText = cipher.doFinal(messageData.getBytes(StandardCharsets.UTF_8));
+            return Base64.encodeBase64(cipherText);
+        } catch (Exception e) {
+            throw new MessageEncrypterException(e);
+        }
+    }
+
+    
     public byte[] decrypt(Message message) throws MessageDecrypterException {
         try {
             String nonce = message.getNonce();
             SecretKey aesKey = getAesSecretKey(message);
             IvParameterSpec ivParameterSpec = getInitializationVector(nonce);
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameterSpec);
 
             byte[] decodedMessageData = Base64.decodeBase64(message.getData());
             return cipher.doFinal(decodedMessageData);
             
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | 
-                IllegalBlockSizeException | BadPaddingException | 
-                InvalidAlgorithmParameterException e) {
+        } catch (Exception e) {
             throw new MessageDecrypterException(e);
         }
     }
+
     
+    public String generateNonce(int size) {
+        byte[] nonce = new byte[size];
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(nonce);
+        return Base64.encodeBase64String(nonce);
+    }
+    
+
     private IvParameterSpec getInitializationVector(String nonce) {
         byte[] initializationVector = Base64.decodeBase64(nonce);
         return new IvParameterSpec(initializationVector);
     }
+
 
     private SecretKey getAesSecretKey(Message message) throws MessageDecrypterException {
         UUID chatCreatorId = chatRepository
@@ -82,24 +104,13 @@ public record AesMessageDecrypter(
         Message helloMessage = messageRepository
             .findByTypeAndReceiver(MessageType.hello, chatCreatorId)
             .orElseThrow();
-
-        // Message decryptedHelloMessage = rsaMessageDecrypter.decrypt(helloMessage);
-        // String helloMessageData = decryptedHelloMessage.getData();
-        // String helloMessageData = new String(decryptedHelloMessage.getData());
-        // byte[] decryptedRsaBytes = helloMessageData.getBytes(StandardCharsets.UTF_16);
-        byte[] decryptedRsaBytes = rsaMessageDecrypter.decrypt(helloMessage);
-
+            
+        byte[] decryptedRsaBytes = rsaAlgorithm.decrypt(helloMessage);
         int underscoreIndex = getDoubleUnderscoreIndex(decryptedRsaBytes);
-        byte[] key = IntStream
-            .range(underscoreIndex + 1, decryptedRsaBytes.length)
-            .map(i -> decryptedRsaBytes[i])
-            .filter(el -> el != 0)
-            .collect(ByteArrayOutputStream::new, (baos, i) -> baos.write((byte) i),
-                (baos1, baos2) -> baos1.write(baos2.toByteArray(), 0, baos2.size()))
-            .toByteArray();
-
+        byte[] key = Arrays.copyOfRange(decryptedRsaBytes, underscoreIndex + 1, decryptedRsaBytes.length);
         return new SecretKeySpec(key, "AES");
     }
+
 
     private int getDoubleUnderscoreIndex(byte[] decryptedRsaBytesArray) {
         boolean isPreviousSymbolUnderscore = false;

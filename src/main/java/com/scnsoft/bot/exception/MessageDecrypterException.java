@@ -1,6 +1,6 @@
 package com.scnsoft.bot.exception;
 
-public class MessageDecrypterException extends Exception {
+public class MessageDecrypterException extends RuntimeException {
 
     public MessageDecrypterException() {
     }
