@@ -10,6 +10,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
 
@@ -41,19 +42,19 @@ public class Message {
     private UUID id;
 
     @Type(type = "org.hibernate.type.UUIDCharType")
-    // @NotNull
+    @NotNull
     private UUID sender;
 
     @Type(type = "org.hibernate.type.UUIDCharType")
-    // @NotNull
+    @NotNull
     private UUID receiver;
 
     @Type(type = "org.hibernate.type.UUIDCharType")
-    // @NotNull
+    @NotNull
     private UUID chat;
 
     @Enumerated(EnumType.ORDINAL)
-    // @NotNull
+    @NotNull
     private MessageType type;
 
     @Column(length = 344)
