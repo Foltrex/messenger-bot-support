@@ -56,10 +56,11 @@ public record MessageContoller(
                     .chat(chatId)
                     .type(MessageType.whisper)
                     .data(decryptedMessageData)
+                    .nonce(generatedNonce)
                     .build();
             })
             .peek(decryptedMessage -> {
-                String encryptedMessageData = new String(aesAlgorithm.encrypt(message), StandardCharsets.UTF_8);
+                String encryptedMessageData = new String(aesAlgorithm.encrypt(decryptedMessage), StandardCharsets.UTF_8);
                 decryptedMessage.setData(encryptedMessageData);
             })
             .toList();

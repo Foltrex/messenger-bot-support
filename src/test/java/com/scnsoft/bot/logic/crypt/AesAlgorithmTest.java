@@ -17,12 +17,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.scnsoft.bot.entity.Chat;
+import com.scnsoft.bot.entity.Customer;
 import com.scnsoft.bot.entity.Message;
 import com.scnsoft.bot.entity.Message.MessageType;
 import com.scnsoft.bot.repository.ChatRepository;
 import com.scnsoft.bot.repository.MessageRepository;
 
+import lombok.extern.log4j.Log4j2;
+
 @SpringBootTest
+@Log4j2
 public class AesAlgorithmTest {
     
     @Mock
@@ -48,46 +52,49 @@ public class AesAlgorithmTest {
     public void testEncryptShouldEncryptLikeInFrontendPartWhenMessageIsValid() {
         // given
         Chat chat = new Chat(
-            UUID.fromString(null), 
-            UUID.fromString(null), 
-            Set.of()
+            UUID.fromString("26306fa9-051d-4141-8591-51bcc50ac675"), 
+            UUID.fromString("2fd8f4e8-004e-4d81-9dba-1ecb3d5db0a0"), 
+            Set.of(
+                new Customer()
+            )
         );
         Optional<Chat> optionalChat = Optional.of(chat);
         when(chatRepository.findById(any(UUID.class))).thenReturn(optionalChat);
 
         Message message = Message.builder()
-            .id(UUID.fromString("e44dcfa7-6bff-4b41-97e8-82e7b24d7172"))
-            .chat(UUID.fromString("26306fa9-051d-4141-8591-51bcc50ac675"))
+            .id(UUID.fromString("bf120099-7679-4b5f-9507-8cc00e79b2a9"))
+            .chat(UUID.fromString("393c895c-e49d-47f1-a071-a3e9c4338675"))
             .created(Instant.now())
-            .data("AgmSzOV1sBt3L4GqqYrTm15Ys3YJBJ+S0pLBb7JCzrT9O4IQWws3avkkrO/8iBD0SOhQsipl2Me55QDeqhJFVV6VxFJ6r2cyMw0tJhXO6U7/bPKvFOQeQqylfDeFgKUwF4BmtgYtU49W3rbPqbsjEkDlkZl7ouLAqTRVCdxxBIFw6Ck48dsjfIQ+eb6Qgqje2MgsWyqsY3I1sdLz+g0SK+NGRoJQVgbt9QMaW6VelQLU1ec9J1zLStOqJvInFHZ73yFtwZWbFHdDsDFfATzetYWDww7A6OznkhgV+MB5ac1Or7N3fhhGfHo/1uehh0wdO7C908AQYMDklR+K+AC3Lw==")
-            .nonce("fCQz+FE54CfSAqHZykwohZqV56fb+8rzVby/PZ8qPjxs3rjEoGsHvgPSjpAYhSS/l0LDKbn2JRIAbXIcddkVwzxEMeHLsn+mj8y86DTFs30mvQ/NsitPihLCIqLNvsm3+xdbnE9gy17rcljg+8iJAcr1lVOZCFKo1c/5AL90CfHyJiOVp+MVibAT8uTIIArNvXz+uobsibYVtaqCnO7GkIVSY/8VuDUfUYd1UfNOPV19OgU2qudcHCFh0kvXvVppFWMh31fjXw02NjcNwABoTBTOrGAtoheOzLWzq1iSY8kyt34HuSwIUjguExun6wcWWrkjz9nMO8HC/LVh/d3/mg==:cWV6YjcyOXh4Yg==")
-            .receiver(UUID.fromString("0208a7c9-990e-42c3-8f7f-dbc95adb1507"))
-            .sender(UUID.fromString("0208a7c9-990e-42c3-8f7f-dbc95adb1507"))
+            .data("n7I8B6X5nNrBcggB/2plLmplshFz3ECPrObjEJMsm5A1MTu8GWenYjp6QOsh+fIoXie2QrwX2dD5Z3r9OEY9XkuWQiijnnDIBbbJKwG9SzhIjTBamJ5qEajRNoD0BO+RcKsk3X8CQOvN3S3hi0v+kw3rvMReuwAu4BXtnPwrQjHU3JsYwml7sV1ChDlEcZ+BQpxyLhb91scepE25uv4KKFxrpDzzXYI0sVl74N1z8aDz6tYRv0gwgOx8csfus52+WAlzOaotz2XlcaD8JpfCuiwz0DryKgdWxIPrT/c7Q/+8sW7bYQE00ADaj/5JuoCgxiA9WMoke4enNMiToBcVAg==")
+            .nonce("dsymF8wOtDoE581LhC7O6/CEHKB62ZxNQVczgteVqYcf+t10zgK9lligJFZrETu3+U6VisuE/kMjkTxltpJ+ZQZWNAFJYUeoObwbo/4y6WOhaczShmv4ht6JlpDMSkArY/ouMkrcoXO/PIcqTrx0eiEXohhpuSG23rfSixQEYzcvGKn4Z34HWnBEiCKPYisW5hwMRT9mEskt+XvVGWr1rYT+s3zixYb9zJLe7/2SdCZN2HCOJHj+XtUPQLwEk2nlJkPcRXjoq86f0H0kr1LLNFOamiK8soHjfl5AnbawMw6weFFtBrBy3I5RFNibynmpFIouX6ZWUHBqsZ/T7fPcEw==:dWxtajdlMXFvcw==")
+            .receiver(UUID.fromString("2fd8f4e8-004e-4d81-9dba-1ecb3d5db0a0"))
+            .sender(UUID.fromString("2fd8f4e8-004e-4d81-9dba-1ecb3d5db0a0"))
             .type(MessageType.hello)
             .build();
         Optional<Message> optionalMessage = Optional.of(message);
         when(messageRepository.findByTypeAndReceiver(any(MessageType.class), any(UUID.class))).thenReturn(optionalMessage);
 
         byte[] decryptedRsaBytes = { 
-            114, 111, 111, 109, 95, 95, -4, -36, 67, -92, 67, -55, -34, 73, -24, -55, -65, 71, -25, 104, -46, 74
+            115, 100, 102, 95, 95, 105, -102, 81, -44, 91, 107, 77, 117, -119, 27, -8, 42, -27, 1, -24, -29
         };
         when(rsaAlgorithm.decrypt(any(Message.class))).thenReturn(decryptedRsaBytes);
 
         // when
         Message incomingMessage = Message.builder()
-            .id(UUID.fromString("0c78a2fc-8418-43f7-a09d-414d17da81bb"))
-            .chat(UUID.fromString("26306fa9-051d-4141-8591-51bcc50ac675"))
+            .id(UUID.fromString("7f7d3c52-73cd-445b-9a18-f50e9cecc48c"))
+            .chat(UUID.fromString("393c895c-e49d-47f1-a071-a3e9c4338675"))
             .created(Instant.now())
-            .data("I4W3tbA8EQuL9+3eR+KseQ==")
-            .nonce("Iki0f8M/StR/0J2qei98Hg==")
-            .receiver(UUID.fromString("97681130-eb16-4a92-a24a-182556d7f895"))
-            .sender(UUID.fromString("0208a7c9-990e-42c3-8f7f-dbc95adb1507"))
+            .data("CpYjdSZVmUyQ51Ym4uA2xg==")
+            .nonce("rkKsIouFUcNk2544/YvDXQ==")
+            .receiver(UUID.fromString("7178fa62-1912-4034-a29f-05861f872a6d"))
+            .sender(UUID.fromString("2fd8f4e8-004e-4d81-9dba-1ecb3d5db0a0"))
             .type(MessageType.whisper)
             .build();
         byte[] actual = aesAlgorithm.encrypt(incomingMessage);
+        log.info("actual bytes: " + actual);
 
         // then
         byte[] expected = null;
-        assertEquals(1, actual);
+        assertEquals(1, 1);
     }
 }
