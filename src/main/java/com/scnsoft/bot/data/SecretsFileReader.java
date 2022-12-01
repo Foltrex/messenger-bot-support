@@ -19,12 +19,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.stereotype.Component;
 
-import com.scnsoft.bot.exception.MessageDecrypterException;
+import com.scnsoft.bot.exception.SecretsFileReaderException;
 
 @Component
 public class SecretsFileReader {
@@ -32,7 +31,7 @@ public class SecretsFileReader {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    private static final String CHAR_CREATOR_SECRETS_FILE_PATH = "src/main/resources/secrets.txt";
+    private static final String CHAT_CREATOR_SECRETS_FILE_PATH = "src/main/resources/secrets.txt";
 
     private static final String BEGIN_PRIVATE_KEY_REGEX = ".*BEGIN RSA PRIVATE KEY.*";
     private static final String END_PRIVATE_KEY_REGEX = ".*END RSA PRIVATE KEY.*";
@@ -46,8 +45,8 @@ public class SecretsFileReader {
         "[0-9a-fA-F]{4}",
         "[0-9a-fA-F]{12}$");
 
-    public RSAPrivateKey readRsaPrivateKey() throws MessageDecrypterException {
-        Path path = Paths.get(CHAR_CREATOR_SECRETS_FILE_PATH);
+    public RSAPrivateKey readRsaPrivateKey() throws SecretsFileReaderException {
+        Path path = Paths.get(CHAT_CREATOR_SECRETS_FILE_PATH);
         try (Stream<String> lines = Files.lines(path)) {
 
             String privateKey = lines
@@ -64,12 +63,12 @@ public class SecretsFileReader {
             return (RSAPrivateKey) keyFactory.generatePrivate(keySpec);
             
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new MessageDecrypterException(e);
+            throw new SecretsFileReaderException(e);
         }
     }
 
-    public RSAPublicKey readRsaPublicKey() throws MessageDecrypterException {
-        Path path = Paths.get(CHAR_CREATOR_SECRETS_FILE_PATH);
+    public RSAPublicKey readRsaPublicKey() throws SecretsFileReaderException {
+        Path path = Paths.get(CHAT_CREATOR_SECRETS_FILE_PATH);
         try (Stream<String> lines = Files.lines(path)) {
 
             String publicKey = lines
@@ -86,12 +85,12 @@ public class SecretsFileReader {
             return (RSAPublicKey) keyFactory.generatePublic(keySpec);
 
         } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new MessageDecrypterException(e);
+            throw new SecretsFileReaderException(e);
         }
     }
 
-    public UUID readCustomerId() throws MessageDecrypterException {
-        Path path = Paths.get(CHAR_CREATOR_SECRETS_FILE_PATH);
+    public UUID readCustomerId() throws SecretsFileReaderException {
+        Path path = Paths.get(CHAT_CREATOR_SECRETS_FILE_PATH);
         try {
             String secrets = new String(Files.readAllBytes(path), Charset.defaultCharset());
             Pattern pattern = Pattern.compile(UUID_REGEX);
@@ -104,7 +103,7 @@ public class SecretsFileReader {
                 .orElseThrow(IllegalArgumentException::new);
                 
         } catch (IOException e) {
-            throw new MessageDecrypterException(e);
+            throw new SecretsFileReaderException(e);
         }
     }
 

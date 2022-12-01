@@ -1,40 +1,27 @@
 package com.scnsoft.bot.logic.crypt;
 
-import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.scnsoft.bot.entity.Message;
 import com.scnsoft.bot.entity.Chat;
+import com.scnsoft.bot.entity.Message;
 import com.scnsoft.bot.entity.Message.MessageType;
 import com.scnsoft.bot.exception.MessageDecrypterException;
 import com.scnsoft.bot.exception.MessageEncrypterException;
 import com.scnsoft.bot.repository.ChatRepository;
 import com.scnsoft.bot.repository.MessageRepository;
 
-import lombok.extern.log4j.Log4j2;
-
 @Component
-@Log4j2
 public record AesAlgorithm(
     MessageRepository messageRepository,
     ChatRepository chatRepository,

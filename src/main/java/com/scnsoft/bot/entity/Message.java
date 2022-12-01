@@ -1,15 +1,6 @@
 package com.scnsoft.bot.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-// import javax.validation.constraints.NotNull;
-
-import lombok.Builder;
-
 import java.time.Instant;
 import java.util.UUID;
 
@@ -22,21 +13,24 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Table(name = "message")
-@ToString
 public class Message {
 
     public enum MessageType {
-        hello, //0
-        iam, //1
-        whisper, //2
-        who, //3
+        hello,
+        iam,
+        whisper,
+        who,
         server,
         LEAVE_CHAT,
         ASSIGN_ROLE,

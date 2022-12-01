@@ -10,22 +10,15 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.Type;
 
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import lombok.ToString;
-import lombok.EqualsAndHashCode;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Table(name = "customer")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 public class Customer {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
