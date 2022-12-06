@@ -11,37 +11,38 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
+import com.scnsoft.bot.dto.MessageDto;
 import com.scnsoft.bot.entity.Chat;
 import com.scnsoft.bot.entity.Message;
 import com.scnsoft.bot.entity.Message.MessageType;
 import com.scnsoft.bot.exception.MessageDecrypterException;
 import com.scnsoft.bot.exception.MessageEncrypterException;
-import com.scnsoft.bot.repository.ChatRepository;
-import com.scnsoft.bot.repository.MessageRepository;
 
 @Component
 public record AesAlgorithm(
-    MessageRepository messageRepository,
-    ChatRepository chatRepository,
-    RsaAlgorithm rsaAlgorithm
+    RsaAlgorithm rsaAlgorithm,
+    RestTemplate restTemplate
 ) {
         
     private static final byte UNDERSCORE_UTF16_BYTE_NUMBER = 95;
 
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
 
+    private static final String MESSENGER_URL = "http://localhost:8080";
 
     
-    public byte[] encrypt(Message message) throws MessageEncrypterException {
+    public byte[] encrypt(MessageDto messageDto) throws MessageEncrypterException {
         try {
-            String nonce = message.getNonce();
-            SecretKey aesKey = getAesSecretKey(message);
+            String nonce = messageDto.getNonce();
+            SecretKey aesKey = getAesSecretKey(messageDto.getChat(), messageDto.getSender());
             IvParameterSpec ivParameterSpec = getInitializationVector(nonce);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, aesKey, ivParameterSpec);
-            String messageData = message.getData();
+            String messageData = messageDto.getData();
 
             byte[] cipherText = cipher.doFinal(messageData.getBytes(StandardCharsets.UTF_8));
             return Base64.encodeBase64(cipherText);
@@ -51,15 +52,15 @@ public record AesAlgorithm(
     }
 
     
-    public byte[] decrypt(Message message) throws MessageDecrypterException {
+    public byte[] decrypt(MessageDto messageDto) throws MessageDecrypterException {
         try {
-            String nonce = message.getNonce();
-            SecretKey aesKey = getAesSecretKey(message);
+            String nonce = messageDto.getNonce();
+            SecretKey aesKey = getAesSecretKey(messageDto.getChat(), messageDto.getReceiver());
             IvParameterSpec ivParameterSpec = getInitializationVector(nonce);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameterSpec);
 
-            byte[] decodedMessageData = Base64.decodeBase64(message.getData());
+            byte[] decodedMessageData = Base64.decodeBase64(messageDto.getData());
             return cipher.doFinal(decodedMessageData);
             
         } catch (Exception e) {
@@ -82,17 +83,11 @@ public record AesAlgorithm(
     }
 
 
-    private SecretKey getAesSecretKey(Message message) throws MessageDecrypterException {
-        UUID chatCreatorId = chatRepository
-            .findById(message.getChat())
-            .map(Chat::getCreatorId)
-            .orElseThrow();
-            
-        Message helloMessage = messageRepository
-            .findByTypeAndReceiver(MessageType.hello, chatCreatorId)
-            .orElseThrow();
-            
-        byte[] decryptedRsaBytes = rsaAlgorithm.decrypt(helloMessage);
+    private SecretKey getAesSecretKey(UUID chat, UUID receiver) throws MessageDecrypterException {
+        String helloMessagesUrl = MESSENGER_URL + "/messages/hello?chat=" + "&receiver=" + receiver;
+        ResponseEntity<MessageDto> response = restTemplate.getForEntity(helloMessagesUrl, MessageDto.class);   
+        MessageDto helloMessageDto = response.getBody(); 
+        byte[] decryptedRsaBytes = rsaAlgorithm.decrypt(helloMessageDto);
         int underscoreIndex = getDoubleUnderscoreIndex(decryptedRsaBytes);
         byte[] key = Arrays.copyOfRange(decryptedRsaBytes, underscoreIndex + 1, decryptedRsaBytes.length);
         return new SecretKeySpec(key, "AES");

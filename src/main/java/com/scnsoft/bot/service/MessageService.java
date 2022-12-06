@@ -2,8 +2,8 @@ package com.scnsoft.bot.service;
 
 import java.util.List;
 
-import com.scnsoft.bot.entity.Message;
+import com.scnsoft.bot.dto.MessageDto;
 
 public interface MessageService {
-    List<Message> respondOnBotMessage(Message message);
+    List<MessageDto> respondOnBotMessage(MessageDto message);
 }
