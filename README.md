@@ -19,6 +19,6 @@ Bot modal after registering webhook url
 ![Bot registration modal](https://github.com/Foltrex/messenger-bot-support/blob/gh-pages/bot_registration_modal.png)
 To determine the functionality, you need to register it in the handleIncomingMessage method, which accepts an object of the next class and returns an object of the same class.
 ![Message class](https://github.com/Foltrex/messenger-bot-support/blob/gh-pages/message.png)
-After that, the message is converted and transmitted back to the messenger application.__
+After that, the message is converted and transmitted back to the messenger application. <br />
 Result:
 ![Result](https://github.com/Foltrex/messenger-bot-support/blob/gh-pages/result.png)
