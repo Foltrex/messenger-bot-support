@@ -37,3 +37,6 @@ secrets.properties
 
 ### JavaDoc ###
 docs/
+
+### Mac ###
+.DS_Store
