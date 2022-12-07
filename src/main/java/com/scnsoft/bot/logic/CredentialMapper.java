@@ -18,6 +18,10 @@ import org.springframework.stereotype.Component;
 
 import com.scnsoft.bot.exception.InvalidBotCredentialsException;
 
+/**
+ * Mapper of the string credentials received from the messenger bot bean into objects 
+ * of the classes necessary for encryption and decryption of messages
+ */
 @Component
 public record CredentialMapper(MessengerBot messengerBot) {
     public CredentialMapper{
@@ -32,12 +36,23 @@ public record CredentialMapper(MessengerBot messengerBot) {
 
     private static final String SPACE_REGEX = "\\p{Blank}";
 
+    /**
+     * Maps bots ID of String type to UUID
+     * @return  the bot id of the {@link java.util.UUID} type
+     */
     public UUID mapToUUID() {
         String uuidString = messengerBot.getBotId();
         uuidString = uuidString.replaceAll(SPACE_REGEX, "");
         return UUID.fromString(messengerBot.getBotId());
     }
     
+
+    /**
+     * Maps bot private key in PKCS#1 format of Strign type to {@link java.security.interfaces.RSAPrivateKey} type
+     * @return  the rsa private key
+     * @throws InvalidBotCredentialsException  If the private key string has the wrong format 
+     *                                         or the algorithm is set incorrectly
+     */
     public RSAPrivateKey mapToRsaPrivateKey() throws InvalidBotCredentialsException {
         try {
             Pattern pattern = Pattern.compile(RSA_PRIVATE_KEY_REGEX);
@@ -61,7 +76,13 @@ public record CredentialMapper(MessengerBot messengerBot) {
         }
     }
 
-    public RSAPublicKey mapToRsaPublicKey(String publicKeyString) throws InvalidBotCredentialsException {
+    /**
+     * Maps bot public key in PKCS#8 format of Strign type to {@link java.security.interfaces.RSAPublicKey} type
+     * @return the rsa public key
+     * @throws InvalidBotCredentialsException  If the public key string has the wrong format 
+     *                                         or the algorithm is set incorrectly
+     */
+    public RSAPublicKey mapToRsaPublicKey() throws InvalidBotCredentialsException {
         try {
             Pattern pattern = Pattern.compile(RSA_PUBLIC_KEY_REGEX);
             String publicKeyStringWithoutHeaderAndFooter = pattern

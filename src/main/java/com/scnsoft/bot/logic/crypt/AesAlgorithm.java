@@ -19,6 +19,10 @@ import com.scnsoft.bot.dto.MessageDto;
 import com.scnsoft.bot.exception.MessageDecrypterException;
 import com.scnsoft.bot.exception.MessageEncrypterException;
 
+/**
+ * Aes message decryptor/encryptor
+ * It is necessary to work on decrypting/encrypting messages of the {@link com.scnsoft.bot.dto.MessageDto.MessageType.whisper} type
+ */
 @Component
 public record AesAlgorithm(
     RsaAlgorithm rsaAlgorithm,
@@ -32,6 +36,12 @@ public record AesAlgorithm(
     private static final String MESSENGER_URL = "http://localhost:8080";
 
     
+    /**
+     * Encryptes the decrypted 'whisper' message that sends to the messenger application from the bot
+     * @param messageDto  the decrypted 'whisper' message from the bot app
+     * @return  the encrypted 'whisper' message from the bot app in bytes
+     * @throws MessageEncrypterException  If the bot data is specified incorrectly
+     */
     public byte[] encrypt(MessageDto messageDto) throws MessageEncrypterException {
         try {
             String nonce = messageDto.nonce();
@@ -48,7 +58,12 @@ public record AesAlgorithm(
         }
     }
 
-    
+    /**
+     * Decrypts the encrypted 'whisper' message that came from the messenger application to the bot.
+     * @param messageDto  the encrypted 'whisper' message from messenger app
+     * @return  the decrypted incomming 'whisper' message from the messenger in bytes
+     * @throws MessageDecrypterException  If the bot data is specified incorrectly
+     */
     public byte[] decrypt(MessageDto messageDto) throws MessageDecrypterException {
         try {
             String nonce = messageDto.nonce();
@@ -66,6 +81,11 @@ public record AesAlgorithm(
     }
 
     
+    /**
+     * Generates nonce with given length
+     * @param size  the nonce length
+     * @return  the generated nonce string
+     */
     public String generateNonce(int size) {
         byte[] nonce = new byte[size];
         SecureRandom secureRandom = new SecureRandom();

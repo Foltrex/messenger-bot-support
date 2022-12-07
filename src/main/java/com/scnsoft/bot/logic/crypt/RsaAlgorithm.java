@@ -11,11 +11,21 @@ import com.scnsoft.bot.dto.MessageDto;
 import com.scnsoft.bot.exception.MessageDecrypterException;
 import com.scnsoft.bot.logic.CredentialMapper;
 
+/**
+ * Rsa message decryptor only (there is no need for rsa encryption in this context)
+ * It is necessary to work on decrypting messages of the {@link com.scnsoft.bot.dto.MessageDto.MessageType.hello} type
+ */
 @Component
 public record RsaAlgorithm(
     CredentialMapper credentialMapper
 ) {
     
+    /**
+     * Decrypts the encrypted 'hello' message that came from the messenger application to the bot.
+     * @param messageDto  the encrypted 'hello' message from messenger app
+     * @return  the decrypted incomming 'hello' message in bytes
+     * @throws MessageDecrypterException If the bot credentials are specified incorrectly
+     */
     public byte[] decrypt(MessageDto messageDto) throws MessageDecrypterException {
         try {
             RSAPrivateKey privateKey = credentialMapper.mapToRsaPrivateKey();
