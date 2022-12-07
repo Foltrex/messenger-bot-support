@@ -1,0 +1,11 @@
+com.scnsoft.bot
+com.scnsoft.bot.config
+com.scnsoft.bot.controller
+com.scnsoft.bot.dto
+com.scnsoft.bot.exception
+com.scnsoft.bot.logic
+com.scnsoft.bot.logic.crypt
+com.scnsoft.bot.logic.impl
+com.scnsoft.bot.model
+com.scnsoft.bot.service
+com.scnsoft.bot.service.impl
