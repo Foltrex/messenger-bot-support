@@ -20,7 +20,7 @@ public record RsaAlgorithm(
         try {
             RSAPrivateKey privateKey = credentialMapper.mapToRsaPrivateKey();
 
-            byte[] inputBytes = Base64.decodeBase64(messageDto.getData());
+            byte[] inputBytes = Base64.decodeBase64(messageDto.data());
             Cipher cipher = Cipher.getInstance("RSA");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             return cipher.doFinal(inputBytes);

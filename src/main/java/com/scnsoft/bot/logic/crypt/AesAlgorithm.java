@@ -34,12 +34,12 @@ public record AesAlgorithm(
     
     public byte[] encrypt(MessageDto messageDto) throws MessageEncrypterException {
         try {
-            String nonce = messageDto.getNonce();
-            SecretKey aesKey = getAesSecretKey(messageDto.getChat(), messageDto.getSender());
+            String nonce = messageDto.nonce();
+            SecretKey aesKey = getAesSecretKey(messageDto.chat(), messageDto.sender());
             IvParameterSpec ivParameterSpec = getInitializationVector(nonce);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, aesKey, ivParameterSpec);
-            String messageData = messageDto.getData();
+            String messageData = messageDto.data();
 
             byte[] cipherText = cipher.doFinal(messageData.getBytes(StandardCharsets.UTF_8));
             return Base64.encodeBase64(cipherText);
@@ -51,13 +51,13 @@ public record AesAlgorithm(
     
     public byte[] decrypt(MessageDto messageDto) throws MessageDecrypterException {
         try {
-            String nonce = messageDto.getNonce();
-            SecretKey aesKey = getAesSecretKey(messageDto.getChat(), messageDto.getReceiver());
+            String nonce = messageDto.nonce();
+            SecretKey aesKey = getAesSecretKey(messageDto.chat(), messageDto.receiver());
             IvParameterSpec ivParameterSpec = getInitializationVector(nonce);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, aesKey, ivParameterSpec);
 
-            byte[] decodedMessageData = Base64.decodeBase64(messageDto.getData());
+            byte[] decodedMessageData = Base64.decodeBase64(messageDto.data());
             return cipher.doFinal(decodedMessageData);
             
         } catch (Exception e) {
