@@ -8,7 +8,6 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 import com.scnsoft.bot.dto.MessageDto;
-import com.scnsoft.bot.entity.Message;
 import com.scnsoft.bot.exception.MessageDecrypterException;
 import com.scnsoft.bot.logic.CredentialMapper;
 

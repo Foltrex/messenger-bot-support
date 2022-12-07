@@ -16,9 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.scnsoft.bot.dto.MessageDto;
-import com.scnsoft.bot.entity.Chat;
-import com.scnsoft.bot.entity.Message;
-import com.scnsoft.bot.entity.Message.MessageType;
 import com.scnsoft.bot.exception.MessageDecrypterException;
 import com.scnsoft.bot.exception.MessageEncrypterException;
 
@@ -84,7 +81,7 @@ public record AesAlgorithm(
 
 
     private SecretKey getAesSecretKey(UUID chat, UUID receiver) throws MessageDecrypterException {
-        String helloMessagesUrl = MESSENGER_URL + "/messages/hello?chat=" + "&receiver=" + receiver;
+        String helloMessagesUrl = MESSENGER_URL + "/messages/hello?chat=" + chat + "&receiver=" + receiver;
         ResponseEntity<MessageDto> response = restTemplate.getForEntity(helloMessagesUrl, MessageDto.class);   
         MessageDto helloMessageDto = response.getBody(); 
         byte[] decryptedRsaBytes = rsaAlgorithm.decrypt(helloMessageDto);

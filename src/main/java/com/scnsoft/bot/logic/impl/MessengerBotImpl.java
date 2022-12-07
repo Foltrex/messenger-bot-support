@@ -17,7 +17,7 @@ public class MessengerBotImpl implements MessengerBot {
     @Override
     public String getBotId() {
         return """
-            ff3b5310-6c17-469c-bd1b-679464c80807
+            24611ad6-65c7-4cf4-9272-982a7d33cf10
                 """;
     }
 
@@ -25,14 +25,14 @@ public class MessengerBotImpl implements MessengerBot {
     public String getPublicKey() {
         return """
             -----BEGIN PUBLIC KEY-----
-            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuCoO6q5NEbFJyKpihupY
-            SIFfEi4ovqJbMdA1Jv4qOmGj6IVMwNHzi/XNuwPeSo5TsQNHsGAPsQ6f0r9folW1
-            f+v0HtUfojE8sa/9c4MalvZ+y2nnczzfAnDGEzckyEKAYJi7eUUaFG5gH/cqyrpA
-            xJMSCaxzbUgCr0WSa09MY2pTy9OKDPo3kolD7ESkW8S7xjPEU+ZM7ha6veq9uTDf
-            uml6z7hZZh+ATiS5bh+SQoh5me0dygcoH6akzT7o5xnQq13Q35ZFKJ7AS2e2N/SK
-            UQFvgA8JUv11D4wUUaSGizj/34LitBzkQw7Ez0TBvJrXDWeRVqtb/3rq0htt25vc
-            MwIDAQAB
-            -----END PUBLIC KEY-----            
+            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzvPvOFeHcrPM25tMtIDU
+            4JXZ1RjbEuS8sjSX7DRImomIH6a4b1M2jmYoh4tZKZcowNWVD50rv41fYGvA+gjG
+            dKzjdRehJX4gSG+D7H5JvzmDCX70AM9SJR8MpnOyBI7z2gKv3i+4HY/e9/RTHo++
+            jUxFPcQlQSCQGCgN2pwTLxnNK8cPLvaE+gDSGyQrOBpuXooSKjYLsEhpCklwFO0r
+            oLzhE3BZn8CyKSHG1GzkZHgmch4qVv2ow7HUhd5x+9hlkooZLj2f9tZRoNaK7M53
+            1mixVbcFQj86eSyO0Vatev+tJyqk0BsEUIResOk1WIn1cCwKubO20RZxJGposzJV
+            UQIDAQAB
+            -----END PUBLIC KEY-----                                                  
                 """;
     }
 
@@ -40,32 +40,32 @@ public class MessengerBotImpl implements MessengerBot {
     public String getPrivateKey() {
         return """
             -----BEGIN RSA PRIVATE KEY-----
-            MIIEogIBAAKCAQEAuCoO6q5NEbFJyKpihupYSIFfEi4ovqJbMdA1Jv4qOmGj6IVM
-            wNHzi/XNuwPeSo5TsQNHsGAPsQ6f0r9folW1f+v0HtUfojE8sa/9c4MalvZ+y2nn
-            czzfAnDGEzckyEKAYJi7eUUaFG5gH/cqyrpAxJMSCaxzbUgCr0WSa09MY2pTy9OK
-            DPo3kolD7ESkW8S7xjPEU+ZM7ha6veq9uTDfuml6z7hZZh+ATiS5bh+SQoh5me0d
-            ygcoH6akzT7o5xnQq13Q35ZFKJ7AS2e2N/SKUQFvgA8JUv11D4wUUaSGizj/34Li
-            tBzkQw7Ez0TBvJrXDWeRVqtb/3rq0htt25vcMwIDAQABAoIBAAh2xmC6ygf6Ie37
-            BrQ0qQIMEBaB0JWSWKadbxPvsnkka6gQGEr0W0EfdukVcG30xJvqDq1ofNAiX+4L
-            pZWMYt8SNRIFsYJ+yM9Ry1A3wk0V3xXyNBTzwzwVesT/T810YPoPiu4z4tL1j61o
-            aqsOjFN8fuO67UMkgBsWE3ijGFupPyzbXTTtO3Gb7BMVEKz4Klkl6VjDGHsjcvoS
-            XG5JmuMI33qXTl1MvCHY2IqF/SYuri9abuHsLmLUJrUW8cB60euhSnxMfS58nfYX
-            8K8AuXhiQjejECMQbFWKf2Ml0wtHpbpxXnFIH0/oU+fn7P9sZsphgAxGToZWwIhk
-            vAhpc8ECgYEA+zmRBGgiDBYelGPg77a/oCsfTyMhwYfsh6Hxytmg3pufuDj73kbH
-            +wiO00zNauYuWvNA1EdaYWxo45JlzyqyJaunS9u+DLS0KvzrZIbdJayCOOSU2Q/U
-            n7deZX1xlRVBt7kp3CiW89MO68ZADmXP+NZO7tbaPqHwBXLpyuHfbCsCgYEAu6ou
-            oNEsc6iqzCzW+iqO2uYxJLrCZibvi1+DcffeGTQ6E+NVY0XV3ncjdwMwLypj8p8k
-            G5Vz+XC7Ew7Z4QJkEHFUxHR2hba8/Ruq/9kWrEhjHUnGXJ45ixA0EELtZv9tKrwD
-            RuooZWLFY2JyGF3QHpLdReArT0lgJ71CQlNc5BkCgYBGrc101e8uQ1LbILZ5+ooy
-            /67RTusCTcFn71HdZhjySApJhA6oXHWK1L+KBwOL3bKQ9/r3PhPZcOyZieiGvlZc
-            bsykdPAlFvnRVlLLd33kSYJhiz2tS9zgCnDOUNqRvOc+TyPNwsWlV23NO3tuEYrP
-            UUvnuh6wnFKw1cGcyKtY/QKBgF3cycOfu5cBtqO2jbPEU31DAzN2wcKsGMXh+PGo
-            4wpCKAZIfy3PASBrAG8HRjNhBWqVlE7DmqUZcEgg9nLnajsbJCW6holsk+wYyZd7
-            8i4ran98pd0vOmLGsPOtNeZ9PRHRxeXTOm8zTrzdwWlUisKv/EJ109OtRI27yIc6
-            AM0JAoGAanWc+8x7oJ+0HJpkdrMDhaXdx87jGJfNgeRjaKE769KO9zdvgGlheSfh
-            e+V7K/74VZS1yCoIPV4dFmdN+v0eODusrBy9le+f/QK2u+CbiXBaDXSHuxspg/Wa
-            99vaPyrsDkCj/W1+d0tEGoPjrU+nfJcDG/3r/VL0Ulpon1xvecM=
-            -----END RSA PRIVATE KEY-----
+            MIIEowIBAAKCAQEAzvPvOFeHcrPM25tMtIDU4JXZ1RjbEuS8sjSX7DRImomIH6a4
+            b1M2jmYoh4tZKZcowNWVD50rv41fYGvA+gjGdKzjdRehJX4gSG+D7H5JvzmDCX70
+            AM9SJR8MpnOyBI7z2gKv3i+4HY/e9/RTHo++jUxFPcQlQSCQGCgN2pwTLxnNK8cP
+            LvaE+gDSGyQrOBpuXooSKjYLsEhpCklwFO0roLzhE3BZn8CyKSHG1GzkZHgmch4q
+            Vv2ow7HUhd5x+9hlkooZLj2f9tZRoNaK7M531mixVbcFQj86eSyO0Vatev+tJyqk
+            0BsEUIResOk1WIn1cCwKubO20RZxJGposzJVUQIDAQABAoIBAC5CNlGYtwz7han8
+            z6t1NKAyvqs0UBusB0WqHd9NXIE2hrfUc1tm9UXlLeAGVNrID/LyiswfrJy3g/8w
+            dsUs2vdPgdQ1gO65f4vRaWKeY+ubdl/UAcSAkvL7Or+mEr+UGIu9mAQJFJV/CC7S
+            bRXiuYwp5TxGMLGbDrpnkZkw09Tt/4AyA+tvZFi8IWzrnTYd2Ayp9DJFyqFjI5PJ
+            09Qz3jre10rZLLnQ5Xwrwt/OJEEy5yukp/fU4P1L5X5F6jVCur02sd85ToI/3b/E
+            4BvoCv5pZjDqJReCn/dOALzsYcPGNJCToMwCKlI2l2GVinE43qwKPuLcmjv4zkLd
+            OXsaOBUCgYEA8GismyE6H5RhIgP867Z88oompWf7/6aQykqgvQtN7vjcB+6SrW0E
+            +dwiLtgWjtnCOjTylQ+u7FznRobiUT9Ov5SHdm0WEmCuehFt6vfXFRpDHC9jJTxN
+            a18ucZYuhrNtRRqpSHOu/LtHHllD/avTu0GvhxBi1Z/VVZCQhGfDW2sCgYEA3F/Q
+            wbmM76liw982lt8bz9frG5kbXI/4BK9h0zWqct6gzBzWIXEuIJyGihmkvwBIn70c
+            s2Fmu6ob9az/7dyor2CrgD3bc5cyluyhTOG5GrpAqMTyn4/QgnjnM/NdcKVs0/bm
+            8Jzj3xpVveJMUZPfoPmAdw9CkMJ5z9yPALjEHTMCgYEAnNlOM/AbwdrG/LBpZUgs
+            gPlNeYE8UnFT6geCk5Q6hn1q4OnwXKHSK0pKKxHktdKw+9TrqAEReTir08HRCn0p
+            XakEMGm/isH1U8LnWfPVKfl2a38nSnXrdPAmlwkK1etekUVxyMlhE5cEMXK//1MJ
+            0xRp9s7kDMg5IZguEZS5Sn0CgYBj7fblwdQM4Uxt8Yv5ghZEe26bRyRHJumahkTf
+            15gBGr7jj7fx1jbKhu/jM5mnGuPTu5eGKAbD1nFzSA2NuN+tFzLtph8bHVbNZWQH
+            Ttv3KLolTZmPjVFJuLVus06NxBXDUFSMizgxdOmofzOIUnu3rSv50SuoJOfDwAoA
+            k8gqTQKBgBsOsHATAyGy+tXe7c5HOcBcYKReFzLBkbJUV5G48Q/5tc2ELwhe9MOn
+            3FURtUD+Oc5ppBJrOgtGAd4Jk9/k6UFBIPyG+X9IAZP47bwoNEkMkeFQQeHPFAnF
+            JGman2Oifd9/HntRmVwUlIBBZ3ETd598htijPIB/ptRihuWfLheG
+            -----END RSA PRIVATE KEY-----                                        
                 """;
     }
     

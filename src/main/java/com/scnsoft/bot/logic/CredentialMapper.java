@@ -2,6 +2,7 @@ package com.scnsoft.bot.logic;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -12,20 +13,28 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.stereotype.Component;
 
 import com.scnsoft.bot.exception.InvalidBotCredentialsException;
 
 @Component
 public record CredentialMapper(MessengerBot messengerBot) {
+    public CredentialMapper{
+        Security.addProvider(new BouncyCastleProvider());
+    }
+
     private static final String ALGORITHM = "RSA";
 
-    private static final String RSA_PRIVATE_KEY_REGEX = "(?<=-----BEGIN RSA PRIVATE KEY-----(\r\n?|\n))((.*)\1)+(?=-----END RSA PRIVATE KEY-----)";
+    private static final String RSA_PRIVATE_KEY_REGEX = "(?<=-----BEGIN RSA PRIVATE KEY-----(\\r\\n?|\\n))((.*)\\1)+";
 
-    private static final String RSA_PUBLIC_KEY_REGEX = "(?<=-----BEGIN PUBLIC KEY-----(\r\n?|\n))((.*)\1)+(?=-----END PUBLIC KEY-----)";
+    private static final String RSA_PUBLIC_KEY_REGEX = "(?<=-----BEGIN PUBLIC KEY-----(\\r\\n?|\\n))((.*)\\1)+";
 
+    private static final String SPACE_REGEX = "\\p{Blank}";
 
     public UUID mapToUUID() {
+        String uuidString = messengerBot.getBotId();
+        uuidString = uuidString.replaceAll(SPACE_REGEX, "");
         return UUID.fromString(messengerBot.getBotId());
     }
     
@@ -40,7 +49,8 @@ public record CredentialMapper(MessengerBot messengerBot) {
                 .orElseThrow(InvalidBotCredentialsException::new);
 
             String privateKeyStringWithoutLineSeparators = privateKeyStringWithoutHeaderAndFooter
-                .replaceAll(System.lineSeparator(), "");
+                .replaceAll(System.lineSeparator(), "")
+                .replaceAll(SPACE_REGEX, "");
 
             byte[] decodedPrivateKey = Base64.decodeBase64(privateKeyStringWithoutLineSeparators);
             KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
@@ -62,7 +72,8 @@ public record CredentialMapper(MessengerBot messengerBot) {
                 .orElseThrow(InvalidBotCredentialsException::new);
 
             String publicKeyStringWithoutLineSeparators = publicKeyStringWithoutHeaderAndFooter
-                .replaceAll(System.lineSeparator(), "");
+                .replaceAll(System.lineSeparator(), "")
+                .replaceAll(SPACE_REGEX, "");
 
             byte[] decodedPrivateKey = Base64.decodeBase64(publicKeyStringWithoutLineSeparators);
             KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);

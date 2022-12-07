@@ -12,9 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.scnsoft.bot.dto.ChatDto;
 import com.scnsoft.bot.dto.MessageDto;
 import com.scnsoft.bot.dto.MessageDto.MessageType;
-import com.scnsoft.bot.entity.Chat;
 import com.scnsoft.bot.model.Message;
 import com.scnsoft.bot.logic.MessengerBot;
 import com.scnsoft.bot.logic.crypt.AesAlgorithm;
@@ -43,18 +43,18 @@ public record MessageServiceImpl(
         MessageDto decryptedMessage = new MessageDto(messageDto);
         decryptedMessage.setData(decryptedMessageData);
 
-        Message botAnswer = messengerBot.handleIncommingMessage(messageDto.toMessage());
+        Message botAnswer = messengerBot.handleIncommingMessage(decryptedMessage.toMessage());
 
         UUID botId = messageDto.getReceiver();
         UUID chatId = messageDto.getChat();
-        String chatUrl = MESSENGER_URL + "/chat/" + chatId;
-        ResponseEntity<Chat> chatResponse = restTemplate.getForEntity(chatUrl, Chat.class);
-        Chat chat = chatResponse.getBody();
+        String chatUrl = MESSENGER_URL + "/chats/" + chatId;
+        ResponseEntity<ChatDto> chatResponse = restTemplate.getForEntity(chatUrl, ChatDto.class);
+        ChatDto chat = chatResponse.getBody();
         
         return createEcryptedMessageForEachChatMemberFromBot(botAnswer.data(), chat, botId);
     }
     
-    private List<MessageDto> createEcryptedMessageForEachChatMemberFromBot(String decryptedMessageData, Chat chat, UUID botId) {
+    private List<MessageDto> createEcryptedMessageForEachChatMemberFromBot(String decryptedMessageData, ChatDto chat, UUID botId) {
         List<MessageDto> messageDtos = chat.getMembers()
             .stream()
             .filter(member -> !Objects.equals(member.getId(), botId))
