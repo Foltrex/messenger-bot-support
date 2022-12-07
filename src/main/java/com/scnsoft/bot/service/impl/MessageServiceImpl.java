@@ -32,19 +32,8 @@ public record MessageServiceImpl(
     @Override
     public List<MessageDto> respondOnBotMessage(MessageDto messageDto) {
         String decryptedMessageData = new String(aesAlgorithm.decrypt(messageDto), StandardCharsets.UTF_8);
-
-        MessageDto decryptedMessage = MessageDto.builder()
-            .sender(messageDto.sender())
-            .receiver(messageDto.receiver())
-            .chat(messageDto.chat())
-            .type(messageDto.type())
-            .data(decryptedMessageData)
-            .attachments(messageDto.attachments())
-            .nonce(messageDto.attachments())
-            .created(messageDto.created())
-            .build();
-
-        Message botAnswer = messengerBot.handleIncommingMessage(decryptedMessage.toMessage());
+        Message decryptedIncommingMessage = new Message(decryptedMessageData, null);
+        Message botAnswer = messengerBot.handleIncommingMessage(decryptedIncommingMessage);
 
         UUID botId = messageDto.receiver();
         UUID chatId = messageDto.chat();
@@ -56,7 +45,7 @@ public record MessageServiceImpl(
     }
     
     private List<MessageDto> createEcryptedMessageForEachChatMemberFromBot(String decryptedMessageData, ChatDto chat, UUID botId) {
-        List<MessageDto> messageDtos = chat.members()
+        return chat.members()
             .stream()
             .filter(member -> !Objects.equals(member.id(), botId))
             .map(member -> {
@@ -82,7 +71,5 @@ public record MessageServiceImpl(
                     .build();
             })
             .toList();
-
-        return messageDtos;
     }
 }
